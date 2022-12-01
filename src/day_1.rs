@@ -31,16 +31,15 @@ impl Run<Vec<Vec<i32>>, i32> for Day1 {
     }
 }
 
-fn max_calories(input: &Vec<Vec<i32>>) -> i32 {
-    let elf_counts: Vec<i32> = input.into_iter().map(|v| v.into_iter().sum()).collect();
-    elf_counts.into_iter().max().unwrap()
+fn max_calories(input: &[Vec<i32>]) -> i32 {
+    input.iter().map(|v| v.iter().sum()).max().unwrap()
 }
 
-fn sum_max_calories(input: &Vec<Vec<i32>>) -> i32 {
-    let mut elf_counts: Vec<i32> = input.into_iter().map(|v| v.into_iter().sum()).collect();
+fn sum_max_calories(input: &[Vec<i32>]) -> i32 {
+    let mut elf_counts: Vec<i32> = input.iter().map(|v| v.iter().sum()).collect();
     elf_counts.sort();
     elf_counts.reverse();
-    elf_counts[0..3].into_iter().sum()
+    elf_counts[0..3].iter().sum()
 }
 
 #[cfg(test)]
