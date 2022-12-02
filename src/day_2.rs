@@ -1,10 +1,8 @@
-#![allow(dead_code)]
-#![allow(unused_variables)]
 use std::str::FromStr;
 
 use anyhow::{Result, Error};
 
-use crate::runner::{Parse, RunMut};
+use crate::runner::{Parse, Run};
 
 pub struct Day2 {}
 
@@ -14,64 +12,53 @@ impl Parse<Vec<Game>> for Day2 {
     }
 }
 
-impl RunMut<Vec<Game>, usize> for Day2 {
-    fn part_one(input: &mut Vec<Game>) -> Result<usize> {
-        let mut acc = 0;
-        for game in input {
-            game.outcome_by_play();
-            acc += game.outcome;
-        }
-        Ok(acc)
+impl Run<Vec<Game>, usize> for Day2 {
+    fn part_one(input: &Vec<Game>) -> Result<usize> {
+        Ok(input.iter().map(|g| g.outcome_by_play()).sum())
     }
 
-    fn part_two(input: &mut Vec<Game>) -> Result<usize> {
-        let mut acc = 0;
-        for game in input {
-            game.outcome_by_desition();
-            acc += game.outcome;
-        }
-        Ok(acc)
+    fn part_two(input: &Vec<Game>) -> Result<usize> {
+        Ok(input.iter().map(|g| g.outcome_by_desition()).sum())
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 pub struct Game {
     elf: Play,
     player: Play,
     desition: Desition,
-    outcome: usize,
 }
 
 impl Game {
     fn new(elf: Play, player: Play, desition: Desition) -> Self {
-        Self { elf, player, desition, outcome: 0}
+        Self { elf, player, desition}
     }
 
-    fn outcome_by_play(&mut self) {
+    fn outcome_by_play(&self) -> usize {
         match (&self.elf, &self.player) {
-            (Play::Rock, Play::Rock) => self.outcome = 4,
-            (Play::Rock, Play::Paper) => self.outcome = 8,
-            (Play::Rock, Play::Scissors) => self.outcome = 3,
-            (Play::Paper, Play::Rock) => self.outcome = 1,
-            (Play::Paper, Play::Paper) => self.outcome = 5,
-            (Play::Paper, Play::Scissors) => self.outcome = 9,
-            (Play::Scissors, Play::Rock) => self.outcome = 7,
-            (Play::Scissors, Play::Paper) => self.outcome = 2,
-            (Play::Scissors, Play::Scissors) => self.outcome = 6,
+            (Play::Rock, Play::Rock) =>  4,
+            (Play::Rock, Play::Paper) =>  8,
+            (Play::Rock, Play::Scissors) => 3,
+            (Play::Paper, Play::Rock) => 1,
+            (Play::Paper, Play::Paper) => 5,
+            (Play::Paper, Play::Scissors) => 9,
+            (Play::Scissors, Play::Rock) => 7,
+            (Play::Scissors, Play::Paper) => 2,
+            (Play::Scissors, Play::Scissors) => 6,
         }
     }
     
-    fn outcome_by_desition(&mut self) {
+    fn outcome_by_desition(&self) -> usize {
         match (&self.elf, &self.desition){
-            (Play::Rock, Desition::Win) => self.outcome = 8,
-            (Play::Rock, Desition::Draw) => self.outcome = 4,
-            (Play::Rock, Desition::Lose) => self.outcome = 3,
-            (Play::Paper, Desition::Win) => self.outcome = 9,
-            (Play::Paper, Desition::Draw) => self.outcome = 5,
-            (Play::Paper, Desition::Lose) => self.outcome = 1,
-            (Play::Scissors, Desition::Win) => self.outcome = 7,
-            (Play::Scissors, Desition::Draw) => self.outcome = 6,
-            (Play::Scissors, Desition::Lose) => self.outcome = 2,
+            (Play::Rock, Desition::Win) => 8,
+            (Play::Rock, Desition::Draw) => 4,
+            (Play::Rock, Desition::Lose) => 3,
+            (Play::Paper, Desition::Win) => 9,
+            (Play::Paper, Desition::Draw) => 5,
+            (Play::Paper, Desition::Lose) => 1,
+            (Play::Scissors, Desition::Win) => 7,
+            (Play::Scissors, Desition::Draw) => 6,
+            (Play::Scissors, Desition::Lose) => 2,
         }
     }
 }
@@ -95,14 +82,14 @@ impl FromStr for Game{
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 enum Play {
     Rock,
     Paper,
     Scissors,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 enum Desition {
     Win,
     Draw,
@@ -112,7 +99,7 @@ enum Desition {
 
 #[cfg(test)]
 mod tests_day1 {
-    use crate::runner::MutExecutor;
+    use crate::runner::Executor;
     use super::*;
     use anyhow::Result;
 
