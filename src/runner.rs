@@ -57,14 +57,14 @@ impl<I, R, T> MutExecutor<I, R, T> for T
 where
     T: RunMut<I, R> + Parse<I>,
     R: Display,
-    I: Clone,
 {
     fn run(path: &str) -> Result<(R, R)> {
         let input = std::fs::read_to_string(path)?;
-        let mut input = <T as Parse<I>>::parse_input(input.as_str())?;
-        let r1 = <T as RunMut<I, R>>::part_one(&mut input.clone())?;
+        let mut input1 = <T as Parse<I>>::parse_input(input.as_str())?;
+        let mut input2 = <T as Parse<I>>::parse_input(input.as_str())?;
+        let r1 = <T as RunMut<I, R>>::part_one(&mut input1)?;
         println!("{} part 1: {}", path, r1);
-        let r2 = <T as RunMut<I, R>>::part_two(&mut input)?;
+        let r2 = <T as RunMut<I, R>>::part_two(&mut input2)?;
         println!("{} part 2: {}", path, r2);
         Ok((r1, r2))
     }
