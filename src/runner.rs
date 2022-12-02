@@ -20,7 +20,7 @@ pub trait RunMut<I, R> {
     fn part_two(input: &mut I) -> Result<R>;
 }
 
-// There's gotta be better way to implement this, than to have a traits per implementation
+// There's gotta be better way to implement this, than to have a trait per implementation
 
 pub trait Executor<I, R, T>
 where
